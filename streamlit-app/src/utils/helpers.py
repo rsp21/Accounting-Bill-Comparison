@@ -15,7 +15,7 @@ def load_data(file):
         st.error(f"Error loading file: {e}")
         return None
 
-def dataframe_matching(df1):
+def dataframe_matching(df1,df2,matching_column_manufactory,matching_column_netsuite):
     """
     Match tables based on their key column
     """
