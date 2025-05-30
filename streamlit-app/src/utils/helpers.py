@@ -60,6 +60,7 @@ def load_data_netsuite() -> pd.DataFrame:
         try:
             st.write('mid try')
             df_table = pd.read_html(html_content, header=0)
+            st.write('try after reading')
             st.dataframe(df_table)
         except ValueError:
             st.write('mid except')
