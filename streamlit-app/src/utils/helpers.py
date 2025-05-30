@@ -54,6 +54,7 @@ def load_data_netsuite() -> pd.DataFrame:
     try:
         url = 'https://5432914.app.netsuite.com/app/reporting/webquery.nl?compid=5432914&entity=451563&email=brett.haws@rspsupply.com&role=1024&cr=615&hash=AAEJ7tMQl87BiU2hsYVm8At934P_K03JVaQPGUT5V-tfzMPzQsk'
         response = requests.get(url)
+        st.write(response.status_code)
         html_content = StringIO(response.text)
         try:
             df_table = pd.read_html(html_content, header=0)[0]
