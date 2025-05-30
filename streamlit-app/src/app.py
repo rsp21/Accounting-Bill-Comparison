@@ -60,7 +60,7 @@ with col1_m:
 
 with col2_m:
     matching_column_netsuite = st.selectbox(
-        f"Matching Column {uploaded_file_1.name}",
+        f"Matching Column NetSuite",
         ([x for x in df2.columns]),
     )
 

@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import requests
 from io import StringIO
+import time
 
 @st.cache_data
 def load_data(file):
@@ -49,6 +50,8 @@ def load_data_netsuite() -> pd.DataFrame:
     Returns:
     - pd.DataFrame: DataFrame containing the downloaded data.
     """
+    time.sleep(3)
+    
     try:
         url = 'https://5432914.app.netsuite.com/app/reporting/webquery.nl?compid=5432914&entity=451563&email=brett.haws@rspsupply.com&role=1024&cr=615&hash=AAEJ7tMQl87BiU2hsYVm8At934P_K03JVaQPGUT5V-tfzMPzQsk'
         response = requests.get(url)
