@@ -15,16 +15,25 @@ def load_data(file):
         st.error(f"Error loading file: {e}")
         return None
 
-def perform_calculations(df1):
+def dataframe_matching(df1):
     """
-    Perform comparison calculations between two dataframes
+    Match tables based on their key column
     """
     try:
 
-        result = df1
-        
-        
-        return result
+        # Define your matching columns
+        matching_column_manufactory = 'id'  # replace with actual column in df1
+        matching_column_netsuite = 'external_id'  # replace with actual column in df2
+
+        # Optional: rename netsuite column to match manufactory for comparison
+        df2_renamed = df2.rename(columns={matching_column_netsuite: matching_column_manufactory})
+
+        # Find values in df1 not in df2
+        df1_not_in_df2 = df1[~df1[matching_column_manufactory].isin(df2_renamed[matching_column_manufactory])]
+
+        # Find values in df2 not in df1
+        df2_not_in_df1 = df2[~df2_renamed[matching_column_manufactory].isin(df1[matching_column_manufactory])]
+
     except Exception as e:
         st.error(f"Error in calculations: {e}")
         return None

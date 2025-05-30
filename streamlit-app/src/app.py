@@ -1,10 +1,11 @@
-#  & "C:/Users/Pedro Sanhueza/AppData/Local/Programs/Python/Python313/Scripts/streamlit.exe" run "c:/Users/Pedro Sanhueza/OneDrive - RSP Supply/Documents/Script/external projects/Brett Haws/Accounting-Bill-Comparison/streamlit-app/src/app.py"
+# & "C:\Users\Pedro Sanhueza\AppData\Local\Programs\Python\Python313\Scripts\streamlit.cmd" run "c:/Users/Pedro Sanhueza/OneDrive - RSP Supply/Documents/Script/external projects/Brett Haws/Accounting-Bill-Comparison/streamlit-app/src/app.py"
+# & "C:/Users/Pedro Sanhueza/AppData/Local/Programs/Python/Python313/Scripts/streamlit.exe" run "c:/Users/Pedro Sanhueza/OneDrive - RSP Supply/Documents/Script/external projects/Brett Haws/Accounting-Bill-Comparison/streamlit-app/src/app.py"
 
 import streamlit as st
 import pandas as pd
 # import PyPDF2
 import numpy as np
-from utils.helpers import load_data, perform_calculations, load_data_netsuite
+from utils.helpers import load_data, dataframe_matching, load_data_netsuite
 
 st.set_page_config(
     page_title="RSP Accounting Bill Comparison",
@@ -23,58 +24,61 @@ option = st.selectbox(
     placeholder="Select contact method...",
 )
 
-uploaded_file = st.file_uploader("Upload first CSV file", type=["csv", "pdf"], key="file1")
+col1, col2 = st.columns(2)
 
-if not uploaded_file:
+with col1:
+    uploaded_file_1 = col1.file_uploader("Upload Manufactory file", type=["csv", "pdf"], key="file1")
+    if uploaded_file_1:
+        if uploaded_file_1.name.endswith('.csv'):
+            try:
+                df1 = load_data(uploaded_file_1)
+                col1.subheader(uploaded_file_1.name)
+                # col1.success("CSV file successfully uploaded and read.")
+                col1.data_editor(df1, num_rows="dynamic")
+            except Exception as e:
+                col1.error(f"Error reading CSV: {e}")
+
+
+with col2:
+    df2 = load_data_netsuite()
+    col2.subheader("NetSuite Data")
+    col2.write('(automatically connected)')
+    col2.data_editor(df2, num_rows="dynamic")
+
+if not uploaded_file_1:
     st.stop()
 
-if uploaded_file is not None:
-    file_name = uploaded_file.name
-    file_type = file_name.split(".")[-1].lower()
-    if file_type == "csv":
-        try:
-            df1 = load_data(uploaded_file)
-            st.success("CSV file successfully uploaded and read.")
-        except Exception as e:
-            st.error(f"Error reading CSV: {e}")
+# COMPARING
 
-    elif file_type == "pdf":
-        try:
-            pdf_reader = PyPDF2.PdfReader(uploaded_file)
-            text = ""
-            for page in pdf_reader.pages:
-                text += page.extract_text() or ""
-            st.success("PDF file successfully uploaded and processed.")
-            st.text_area("Extracted Text", text, height=300)
-        except Exception as e:
-            st.error(f"Error reading PDF: {e}")
+col1_m, col2_m = st.columns(2)
 
-    else:
-        st.warning("Unsupported file type.")
+with col1_m:
+    matching_column_manufactory = st.selectbox(
+        f"Matching Column {uploaded_file_1.name}",
+        ([x for x in df1.columns]),
+    )
 
-    df2 = load_data_netsuite()
+with col2_m:
+    matching_column_netsuite = st.selectbox(
+        f"Matching Column {uploaded_file_1.name}",
+        ([x for x in df2.columns]),
+    )
 
-    if df1 is not None and df2 is not None:
+if st.button("Calculate Comparison", type="primary"):
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.subheader("Invoice Data")
-            st.data_editor(df1, num_rows="dynamic")
-        with col2:
-            st.subheader("NetSuite Data")
-            st.data_editor(df2, num_rows="dynamic")
+    with st.spinner("Calculating..."):
+    
+        result = dataframe_matching(df1,df2,matching_column_manufactory,matching_column_netsuite)
+        
+        st.subheader("Missmatches")
+        st.data_editor(result, num_rows="dynamic", key="results")
+        
+        csv = result.to_csv(index=False)
+        st.download_button(
+            label="📥 Download Results",
+            data=csv,
+            file_name="comparison_results.csv",
+            mime="text/csv"
+        )
 
-        if st.button("Calculate Comparison", type="primary"):
-            with st.spinner("Calculating..."):
-                result = perform_calculations(df1)
-                
-                st.subheader("Missmatches")
-                st.data_editor(result, num_rows="dynamic")
-                
-                csv = result.to_csv(index=False)
-                st.download_button(
-                    label="📥 Download Results",
-                    data=csv,
-                    file_name="comparison_results.csv",
-                    mime="text/csv"
-                )
+# & "C:\Users\Pedro Sanhueza\AppData\Local\Programs\Python\Python313\Scripts\streamlit.cmd" run "c:/Users/Pedro Sanhueza/OneDrive - RSP Supply/Documents/Script/external projects/Brett Haws/Accounting-Bill-Comparison/streamlit-app/src/app.py"
