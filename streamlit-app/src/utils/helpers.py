@@ -50,14 +50,16 @@ def load_data_netsuite() -> pd.DataFrame:
     Returns:
     - pd.DataFrame: DataFrame containing the downloaded data.
     """
-    time.sleep(3)
-    
+
     try:
         url = 'https://5432914.app.netsuite.com/app/reporting/webquery.nl?compid=5432914&entity=451563&email=brett.haws@rspsupply.com&role=1024&cr=615&hash=AAEJ7tMQl87BiU2hsYVm8At934P_K03JVaQPGUT5V-tfzMPzQsk'
         response = requests.get(url)
-        response.encoding = 'utf-8'  # or try 'utf-8-sig' if needed
         html_content = StringIO(response.text)
-        df_table = pd.read_html(html_content, header=0)[0]
+        try:
+            df_table = pd.read_html(html_content, header=0)[0]
+            st.dataframe(df_table)
+        except ValueError:
+            st.error("Could not parse table from HTML content.")
 
         try:
             return df_table
