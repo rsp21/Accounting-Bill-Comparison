@@ -1,5 +1,5 @@
 import streamlit as st
-import PyPDF2
+# import PyPDF2
 
 def show_about():
     st.title("About RSP Accounting Bill Comparison")
