@@ -59,6 +59,7 @@ def load_data_netsuite() -> pd.DataFrame:
         html_content = StringIO(response.text)
         try:
             df_table = pd.read_html(html_content, header=0)
+            st.write('datafame')
             st.dataframe(df_table)
         except ValueError:
             st.error("Could not parse table from HTML content.")
