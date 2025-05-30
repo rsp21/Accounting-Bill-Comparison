@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-import PyPDF2
+# import PyPDF2
 import numpy as np
 from utils.helpers import load_data, perform_calculations, load_data_netsuite
 
