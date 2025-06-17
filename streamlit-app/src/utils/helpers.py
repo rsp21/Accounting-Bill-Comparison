@@ -69,6 +69,6 @@ def load_data_netsuite() -> pd.DataFrame:
             pass
 
     except Exception as e:
-        print(f"Data loading failed: {e}")
+        st.write(f"Data loading failed: {e}")
 
     return pd.DataFrame()
