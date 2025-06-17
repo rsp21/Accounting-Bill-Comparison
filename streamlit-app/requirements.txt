@@ -4,3 +4,4 @@ numpy==1.26.2
 pytest==7.4.3
 io
 pypdf2
+lxml
