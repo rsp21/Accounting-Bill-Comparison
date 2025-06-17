@@ -29,6 +29,7 @@ col1, col2 = st.columns(2)
 with col1:
     uploaded_file_1 = col1.file_uploader("Upload Manufactory file", type=["csv", "pdf"], key="file1")
     if uploaded_file_1:
+        uploaded_file_1_name = uploaded_file_1.name.split('.')[0]
         if uploaded_file_1.name.endswith('.csv'):
             try:
                 df1 = load_data(uploaded_file_1)
@@ -69,13 +70,20 @@ if st.button("Calculate Comparison", type="primary"):
     with st.spinner("Calculating..."):
     
         result = dataframe_matching(df1,df2,matching_column_manufactory,matching_column_netsuite)
+
+
+        st.subheader(f"Values in {uploaded_file_1_name} and in NetSuite")
+        st.data_editor(result[2], num_rows="dynamic", key="merged_3")
         
-        st.subheader("Missmatches")
-        st.data_editor(result, num_rows="dynamic", key="results")
+        st.subheader(f"Values in {uploaded_file_1_name} not in NetSuite")
+        st.data_editor(result[0], num_rows="dynamic", key="merged_1")
+
+        st.subheader(f"Values in NetSuite not in {uploaded_file_1_name}")
+        st.data_editor(result[1], num_rows="dynamic", key="merged_2")
         
-        csv = result.to_csv(index=False)
+        csv = result[2].to_csv(index=False)
         st.download_button(
-            label="📥 Download Results",
+            label="📥 Download matches",
             data=csv,
             file_name="comparison_results.csv",
             mime="text/csv"
