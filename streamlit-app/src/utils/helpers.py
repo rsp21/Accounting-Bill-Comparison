@@ -57,6 +57,7 @@ def load_data_netsuite() -> pd.DataFrame:
     """
 
     try:
+        st.write('starting')
         url = 'https://5432914.app.netsuite.com/app/reporting/webquery.nl?compid=5432914&entity=451563&email=brett.haws@rspsupply.com&role=1024&cr=615&hash=AAEJ7tMQl87BiU2hsYVm8At934P_K03JVaQPGUT5V-tfzMPzQsk'
         response = requests.get(url)
         response.encoding = 'utf-8'  # or try 'utf-8-sig' if needed
@@ -66,7 +67,7 @@ def load_data_netsuite() -> pd.DataFrame:
         try:
             return df_table
         except Exception:
-            print('cannot retrive table')
+            st.write('cannot retrive table')
             pass
 
     except requests.exceptions.RequestException as e:
