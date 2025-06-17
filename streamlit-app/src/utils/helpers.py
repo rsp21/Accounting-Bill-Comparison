@@ -62,6 +62,7 @@ def load_data_netsuite() -> pd.DataFrame:
         df_table = pd.read_html(html_content, header=0)[0]
 
         try:
+            st.write('return df_table')
             return df_table
         except Exception:
             st.write('cannot retrive table')
@@ -70,4 +71,4 @@ def load_data_netsuite() -> pd.DataFrame:
     except Exception as e:
         print(f"Data loading failed: {e}")
 
-    return df_table
+    return pd.DataFrame()
