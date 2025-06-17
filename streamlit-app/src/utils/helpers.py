@@ -45,17 +45,6 @@ def dataframe_matching(df1,df2,matching_column_manufactory,matching_column_netsu
         return None
 
 def load_data_netsuite() -> pd.DataFrame:
-    """
-    Downloads and loads data from a NetSuite Web Query URL.
-    Assumes the file is an Excel file unless proven otherwise.
-
-    Parameters:
-    - url (str): The full NetSuite Web Query URL.
-
-    Returns:
-    - pd.DataFrame: DataFrame containing the downloaded data.
-    """
-
     try:
         st.write('starting')
         url = 'https://5432914.app.netsuite.com/app/reporting/webquery.nl'
@@ -78,9 +67,7 @@ def load_data_netsuite() -> pd.DataFrame:
             st.write('cannot retrive table')
             pass
 
-    except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
     except Exception as e:
         print(f"Data loading failed: {e}")
 
-    return pd.DataFrame()
+    return df_table
